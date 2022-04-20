@@ -39,3 +39,82 @@ Making application build more easy
 
 Источники данных:
 - HTTP GET
+
+Пример конфигурации:
+json:
+{
+  "application":
+  {
+    "name":"GoshViewerApp",
+    "description":"Пример приложения для отображения публичных маршрутов Gosh",
+    "dataSources":
+    {
+      [
+        {
+          "name":"routes",
+          "caption":"Маршруты",
+          "type":"httpGet",
+          "url":"https://igosh.pro/api/v2/public/routes?pageSize=100&range=[0,9]",
+          "columns":
+	          [
+	            {"name":"name", "type":"text"},
+	            {"name":"updateDate", "type":"dateTime"},
+	            {"name":"isShared", "type":"boolean"},
+	            {"name":"description", "type":"text"}
+	            {"name":"imageFilename", "type":"text"}
+	            {"name":"viewCount", "type":"integer"}
+	          ]
+        }
+      ]
+    },
+    "pages":{
+    	[
+    		{
+    			"name":"welcome",
+    			"caption":"Рад вас видеть в нашем тестовом приложении!"
+    		},
+    		{
+    			"name":"routes",
+    			"caption":"Список маршрутов",
+    			"routing":
+    				[
+		    			{
+		    				"from":"welcome",
+		    				"parameters":[]
+		    			},
+		    			{
+		    				"from":"routeCover",
+		    				"parameters":[]
+		    			}
+    				]
+    		},
+    		{
+    			"name":"routeCover",
+    			"caption":"Обложка маршрута",
+    			"routing":
+    				[
+		    			{
+		    				"from":"routes",
+		    				"parameters":["id"]
+		    			},
+		    			{
+		    				"from":"route",
+		    				"parameters":[]
+		    			}
+    				]    			
+    		},
+    		{
+    			"name":"route",
+    			"caption":"Описание маршрута",
+    			"routing":
+    				[
+		    			{
+		    				"from":"routeCover",
+		    				"parameters":["id"]
+		    			}
+    				]    			
+    		}
+    	]
+    }
+  }
+}
